@@ -5,7 +5,6 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import colors from '../../../../utils/colors';
 import {Gap, Navbar} from '../../../../components/layouts';
 import FastImage from 'react-native-fast-image';
-import {ImageBlur} from '../../../../assets/images';
 import {fonts} from '../../../../utils/fonts';
 import {Rating} from '@kolking/react-native-rating';
 import {ButtonMain} from '../../../../components/buttons';
