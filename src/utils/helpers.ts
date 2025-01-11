@@ -11,3 +11,9 @@ export const errorMessage = (action: any) => {
 
   return message;
 };
+
+export const deleteArray = (arr: any[], index: number) => {
+  let arrNew = [...arr];
+  arrNew.splice(index, 1);
+  return arrNew;
+};

@@ -1,22 +1,37 @@
 import {createSlice} from '@reduxjs/toolkit';
 
-import InitialState from '../../../store/types';
+import {deleteArray} from '../../../utils/helpers';
 
 interface FeedbackState {
-  whishlist: any[];
+  wishlist: any[];
 }
 
 const initialState: FeedbackState = {
-  whishlist: [],
+  wishlist: [],
 };
 
 export const bookSlice = createSlice({
   name: 'book',
   initialState,
-  reducers: {},
+  reducers: {
+    setWishlist: (state, action) => {
+      if (!action.payload) return;
+      const {payload} = action;
+
+      const wishlistIdx = state.wishlist.findIndex(
+        (item: any) => item?.key === payload?.key,
+      );
+      // Validate for removing whistlist
+      if (wishlistIdx >= 0) {
+        state.wishlist = deleteArray(state.wishlist, wishlistIdx);
+      } else {
+        state.wishlist = [action.payload, ...state.wishlist];
+      }
+    },
+  },
   extraReducers: builder => {},
 });
 
-export const {} = bookSlice.actions;
+export const {setWishlist} = bookSlice.actions;
 
 export default bookSlice.reducer;

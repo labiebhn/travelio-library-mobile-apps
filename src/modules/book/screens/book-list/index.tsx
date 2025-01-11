@@ -1,4 +1,11 @@
-import {FlatList, RefreshControl, StyleSheet, Text, View} from 'react-native';
+import {
+  FlatList,
+  RefreshControl,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import React from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useBookList} from './functions';
@@ -11,6 +18,7 @@ import {ImageIllusEmpty, ImageIllusSearch} from '../../../../assets/images';
 import {fonts} from '../../../../utils/fonts';
 import {MIN_KEYWORD_LENGTH} from '../../../../constants/app';
 import {SkeletonMain} from '../../../../components/loaders';
+import {IconBookmarkFill} from '../../../../assets/icons';
 
 const BookList = (props: any) => {
   const {
@@ -19,14 +27,18 @@ const BookList = (props: any) => {
     paginate,
     refreshing,
     keyword,
-    action: {getData, onRefresh, setKeyword},
+    wishlist,
+    action: {getData, onRefresh, setKeyword, handleWishlist, goToWishlist},
   } = useBookList(props);
 
   const renderItem = ({item}: any) => {
-    return <CardBook data={item} />;
+    const saved = wishlist.some((list: any) => list?.key === item?.key);
+    return <CardBook data={item} saved={saved} onSavePress={handleWishlist} />;
   };
 
   const renderListEmpty = () => {
+    if (loading === 'pending') return;
+
     const isNotFound = keyword.length >= MIN_KEYWORD_LENGTH;
 
     return (
@@ -55,10 +67,19 @@ const BookList = (props: any) => {
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.header}>
-        <InputTextSearch
-          placeholder={"Discover books... (e.g., 'Harry Potter')"}
-          onSearch={setKeyword}
-        />
+        <View style={{flex: 1}}>
+          <InputTextSearch
+            placeholder={"Discover books... (e.g., 'Harry Potter')"}
+            onSearch={setKeyword}
+          />
+        </View>
+        <TouchableOpacity onPress={goToWishlist}>
+          <FastImage
+            source={IconBookmarkFill}
+            style={styles.bookmarkImg}
+            resizeMode={'contain'}
+          />
+        </TouchableOpacity>
       </View>
       <LoadWrapper
         loading={loading}
@@ -66,7 +87,7 @@ const BookList = (props: any) => {
         paginate={paginate}>
         <FlatList
           style={styles.container}
-          contentContainerStyle={{flexGrow: 1}}
+          contentContainerStyle={{flexGrow: 1, paddingBottom: 16}}
           data={data}
           keyExtractor={(_, index) => index.toString()}
           refreshControl={
@@ -100,6 +121,9 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     borderBottomWidth: 1,
     borderColor: colors.border,
+    flexDirection: 'row',
+    alignItems: 'center',
+    columnGap: 16,
   },
   empty: {
     flex: 1,
@@ -114,5 +138,9 @@ const styles = StyleSheet.create({
   emptyDesc: {
     ...fonts.p,
     textAlign: 'center',
+  },
+  bookmarkImg: {
+    width: 24,
+    height: 24,
   },
 });
