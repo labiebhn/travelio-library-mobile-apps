@@ -1,6 +1,7 @@
 import {useEffect, useState} from 'react';
 import {useGetLibrary} from '../../../../services/book';
 import {PaginationStatus} from '../../../../types/service';
+import {MIN_KEYWORD_LENGTH} from '../../../../constants/app';
 
 export const useBookList = (props: any) => {
   const {library, libraryService} = useGetLibrary();
@@ -26,8 +27,10 @@ export const useBookList = (props: any) => {
   };
 
   const getData = (paginate: PaginationStatus) => {
+    if (keyword.length < MIN_KEYWORD_LENGTH) return;
+
     let params = {
-      q: 'Harry',
+      q: keyword,
     };
 
     libraryService(paginate, params);
@@ -39,6 +42,7 @@ export const useBookList = (props: any) => {
     data,
     paginate,
     refreshing,
+    keyword,
     action: {getData, onRefresh, setKeyword},
   };
 };
