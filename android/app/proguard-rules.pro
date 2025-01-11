@@ -9,6 +9,8 @@
 
 # Add any project specific keep options here:
 
+-keep class com.facebook.react.fabric.** { *; }
+
 # react-native-fast-image
 -keep public class com.dylanvann.fastimage.* {*;}
 -keep public class com.dylanvann.fastimage.** {*;}
@@ -18,3 +20,6 @@
   **[] $VALUES;
   public *;
 }
+
+# react-native-config
+-keep class com.traveliolibraryapps.BuildConfig { *; }

@@ -22,7 +22,6 @@
     "react-native-config": "^1.5.3",
     "react-native-fast-image": "^8.6.3",
     "react-native-linear-gradient": "^2.8.3",
-    "react-native-reanimated": "^3.16.6",
     "react-native-safe-area-context": "^5.1.0",
     "react-native-screens": "^4.5.0",
     "react-native-skeleton-placeholder": "^5.2.4",

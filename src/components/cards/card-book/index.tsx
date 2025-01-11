@@ -10,7 +10,7 @@ import colors, {shadow} from '../../../utils/colors';
 import {fonts} from '../../../utils/fonts';
 import FastImage from 'react-native-fast-image';
 import {NO_IMAGE_URI} from '../../../constants/app';
-import {ImageNoImage} from '../../../assets/images';
+import {ImageBlur} from '../../../assets/images';
 import {Rating} from '@kolking/react-native-rating';
 import {
   IconBookmarkActive,
@@ -61,7 +61,7 @@ const CardBook: FC<CardBookProps> = props => {
       <View style={styles.cover}>
         <FastImage
           source={{uri: coverUri}}
-          defaultSource={ImageNoImage}
+          defaultSource={ImageBlur}
           style={styles.img}
           resizeMode={'cover'}
         />
