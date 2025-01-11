@@ -5,7 +5,6 @@ import {
   PaginateTypeForReset,
 } from '../constants/service';
 import {errorMessage} from '../utils/helpers';
-import Snackbar from 'react-native-snackbar';
 
 const initialState: InitialState = {
   loading: 'idle',
@@ -65,7 +64,7 @@ export const useGetListService = (
       }
 
       // Fill pagination data
-      payload.pagination.hasNextPage = Boolean(data.length);
+      payload.pagination.hasNextPage = PaginateTypeForReset.includes(paginate) || Boolean(data.length);
       payload.pagination.offset = Number(result?.offset || 0);
 
       // Update state
@@ -76,11 +75,7 @@ export const useGetListService = (
       // Catch error message
       const message = errorMessage(error);
       let payload: InitialState = {...state, loading: 'failed', message};
-      payload.pagination.hasNextPage = false;
       setState(payload);
-
-      // Show error on snackbar
-      Snackbar.show({text: message});
 
       return Promise.reject(error);
     }
