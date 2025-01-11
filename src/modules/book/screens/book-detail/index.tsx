@@ -29,7 +29,6 @@ const BookDetail = (props: any) => {
           <View style={styles.cover}>
             <FastImage
               source={{uri: coverUri}}
-              defaultSource={ImageBlur}
               style={styles.img}
               resizeMode={'contain'}
             />
