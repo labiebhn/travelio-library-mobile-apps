@@ -1,14 +1,17 @@
-import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
+import App from './app';
+import {Provider} from 'react-redux';
+import {persistor, store} from './store';
+import {PersistGate} from 'redux-persist/integration/react';
 
 const Root = () => {
   return (
-    <View>
-      <Text>Root</Text>
-    </View>
+    <Provider store={store}>
+      <PersistGate persistor={persistor}>
+        <App />
+      </PersistGate>
+    </Provider>
   );
 };
 
 export default Root;
-
-const styles = StyleSheet.create({});
