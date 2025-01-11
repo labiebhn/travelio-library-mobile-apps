@@ -3,19 +3,25 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
 } from 'react-native';
 import React, {FC, useMemo} from 'react';
 import colors, {shadow} from '../../../utils/colors';
 import {fonts} from '../../../utils/fonts';
 import FastImage from 'react-native-fast-image';
-import {NO_IMAGE_URI} from '../../../constants/app';
 import {ImageBlur} from '../../../assets/images';
 import {Rating} from '@kolking/react-native-rating';
 import {
   IconBookmarkActive,
   IconBookmarkFillActive,
 } from '../../../assets/icons';
+import {useNavigation} from '@react-navigation/native';
+import {
+  getBookAuthor,
+  getBookCover,
+  getBookRating,
+} from '../../../utils/helpers';
 
 export interface CardBookProps {
   data: any;
@@ -28,63 +34,55 @@ const CARD_WIDTH = Dimensions.get('window').width / 2 - 24;
 const CardBook: FC<CardBookProps> = props => {
   const {data, saved, onSavePress} = props;
 
+  const nav = useNavigation();
+
   const coverUri = useMemo(() => {
-    if (!data?.editions) return NO_IMAGE_URI;
-
-    const {editions} = data;
-    const docKey = editions?.docs?.[0]?.key;
-    if (!docKey) return NO_IMAGE_URI;
-
-    const olid = docKey.split('/')?.[2];
-    if (!olid) return NO_IMAGE_URI;
-
-    return `https://covers.openlibrary.org/b/olid/${olid}-M.jpg`;
+    return getBookCover(data?.editions);
   }, [data?.editions]);
 
   const authorName = useMemo(() => {
-    if (!data?.author_name) return '';
-
-    return data.author_name.join(', ');
+    return getBookAuthor(data?.author_name);
   }, [data?.author_name]);
 
   const rating = useMemo(() => {
-    if (!data?.ratings_count || !data?.already_read_count) return 0;
-
-    const averageRating = data.ratings_count / data.already_read_count;
-    const convertedRating = averageRating * 4 + 1;
-
-    return Math.min(Math.max(convertedRating, 1), 5);
+    return getBookRating(data?.ratings_count, data?.already_read_count);
   }, [data?.ratings_count, data?.already_read_count]);
 
+  const goToDetail = () => {
+    nav.navigate('book-detail', {data});
+  };
+
   return (
-    <View style={styles.container}>
-      <View style={styles.cover}>
-        <FastImage
-          source={{uri: coverUri}}
-          defaultSource={ImageBlur}
-          style={styles.img}
-          resizeMode={'cover'}
-        />
-      </View>
-      <View style={styles.body}>
-        <Text style={styles.title} numberOfLines={2}>
-          {data?.title}
-        </Text>
-        <Text style={styles.desc} numberOfLines={2}>
-          {authorName}
-        </Text>
-        <View style={styles.action}>
-          <Rating size={12} rating={rating} disabled={true} />
-          <TouchableOpacity onPress={() => onSavePress?.(data)}>
-            <FastImage
-              source={saved ? IconBookmarkFillActive : IconBookmarkActive}
-              style={styles.bookmarkImg}
-              resizeMode={'contain'}
-            />
-          </TouchableOpacity>
+    <TouchableWithoutFeedback onPress={goToDetail}>
+      <View style={styles.container}>
+        <View style={styles.cover}>
+          <FastImage
+            source={{uri: coverUri}}
+            defaultSource={ImageBlur}
+            style={styles.img}
+            resizeMode={'cover'}
+          />
+        </View>
+        <View style={styles.body}>
+          <Text style={styles.title} numberOfLines={2}>
+            {data?.title}
+          </Text>
+          <Text style={styles.desc} numberOfLines={2}>
+            {authorName}
+          </Text>
+          <View style={styles.action}>
+            <Rating size={12} rating={rating} disabled={true} />
+            <TouchableOpacity onPress={() => onSavePress?.(data)}>
+              <FastImage
+                source={saved ? IconBookmarkFillActive : IconBookmarkActive}
+                style={styles.bookmarkImg}
+                resizeMode={'contain'}
+              />
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 };
 

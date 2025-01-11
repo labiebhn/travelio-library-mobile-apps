@@ -85,14 +85,10 @@ export const fonts = {
     color: colors.text,
   },
   btn: {
-    fontSize: 12,
-    fontFamily: familyDefault.medium,
-    color: colors.text,
-  },
-  btn1: {
-    fontSize: 12,
+    fontSize: 14,
     fontFamily: familyDefault.bold,
     color: colors.text,
+    lineHeight: 18,
   },
   input: {
     fontSize: 12,
