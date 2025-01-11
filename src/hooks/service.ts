@@ -12,7 +12,7 @@ const initialState: InitialState = {
   data: [],
   pagination: {
     limit: 10,
-    offset: 0,
+    offset: 1,
     hasNextPage: true,
   },
 };
@@ -43,7 +43,8 @@ export const useGetListService = (
       if (PaginateTypeForReset.includes(paginate)) {
         params.offset = 0;
       } else {
-        params.offset = state?.offset ? Number(state.offset) * 2 : 0;
+        params.offset =
+          Number(state.pagination.offset || state.pagination.limit) * 2;
       }
 
       // Whitelist field openlibrary api
@@ -51,8 +52,6 @@ export const useGetListService = (
 
       // Fetch API
       const {data: result} = await respository(params, ...args);
-
-      console.log({result, params});
 
       let payload: InitialState = {...state, loading: 'succeeded'};
 

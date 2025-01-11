@@ -4,25 +4,43 @@ import {PaginationStatus} from '../../../../types/service';
 
 export const useBookList = (props: any) => {
   const {library, libraryService} = useGetLibrary();
+  const {loading, data} = library;
 
+  const [keyword, setKeyword] = useState('');
   const [paginate, setPaginate] = useState<PaginationStatus>('reset');
-
-  console.log({library})
+  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
     getData('reset');
-  }, []);
+  }, [keyword]);
+
+  useEffect(() => {
+    if (refreshing && loading !== 'pending') {
+      setRefreshing(false);
+    }
+  }, [refreshing, loading]);
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    getData('refresh');
+  };
 
   const getData = (paginate: PaginationStatus) => {
     let params = {
-      q: 'Harry'
+      q: 'Harry',
     };
 
     libraryService(paginate, params);
     setPaginate(paginate);
   };
 
-  return {};
+  return {
+    loading,
+    data,
+    paginate,
+    refreshing,
+    action: {getData, onRefresh, setKeyword},
+  };
 };
 
 export type UseBookList = ReturnType<typeof useBookList>;
