@@ -3,15 +3,11 @@ import {createSlice} from '@reduxjs/toolkit';
 import InitialState from '../../../store/types';
 
 interface FeedbackState {
-  list: InitialState;
+  whishlist: any[];
 }
 
 const initialState: FeedbackState = {
-  list: {
-    loading: 'idle',
-    message: '',
-    data: [],
-  },
+  whishlist: [],
 };
 
 export const bookSlice = createSlice({
